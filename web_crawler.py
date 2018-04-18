@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 from threading import Thread
 from Path import Path
+from urllib import parse
 
 base_url = "http://www.aueb.gr"
 initial = True
@@ -43,13 +44,24 @@ url_contents = requests.get(base_url).text
 soup = BeautifulSoup(url_contents, "html.parser")
 
 tags = soup.find_all("a")
-tags2 = []
+links = []
+
+parsed_base_url = parse.urlparse(base_url)
+base_url_netloc = parsed_base_url.netloc
 
 for tag in tags:
-    tags2.append(tag["href"])
+    link = tag["href"]
+    if link.startswith("http") or link.startswith("https"):
+        parsed_new_link = parse.urlparse(link)
+        link_netloc = parsed_new_link.netloc
 
-for a_tag in tags:
+        if link_netloc.__eq__(base_url_netloc):
+            links.append(link)
+    elif link.startswith("/"):
+        links.append(base_url + link)
+
+
+for link in links:
     path = Path(base_url)
-    link = a_tag["href"]
     path.add(link)
     Thread(create_path, args=(link, path))
