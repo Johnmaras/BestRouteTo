@@ -43,6 +43,10 @@ url_contents = requests.get(base_url).text
 soup = BeautifulSoup(url_contents, "html.parser")
 
 tags = soup.find_all("a")
+tags2 = []
+
+for tag in tags:
+    tags2.append(tag["href"])
 
 for a_tag in tags:
     path = Path(base_url)
