@@ -22,6 +22,19 @@ visited = set()
 # TODO It will possibly be used the location(internal/external) of the page. More to be added for a better discrimination
 
 
+def isValidPage(link):
+    if link.startswith("http") or link.startswith("https"):
+        parsed_new_link = parse.urlparse(link)
+        link_netloc = parsed_new_link.netloc
+
+        if link_netloc.__eq__(base_url_netloc):
+            return link
+    elif link.startswith("/"):
+        return base_url + link
+
+    return None
+
+
 def create_path(url, path):
 
     url_contents = requests.get(url).text
@@ -33,10 +46,12 @@ def create_path(url, path):
     path.add(url)
     for a_tag in tags:
         link = a_tag["href"]
-        if not visited.__contains__(link):
-            create_path(link, path)
-        else:
-            paths.append(path)
+        valid_link = isValidPage(link)
+        if not(valid_link is None):
+            if not visited.__contains__(valid_link):
+                create_path(valid_link, path)
+            else:
+                paths.append(path)
 
 
 url_contents = requests.get(base_url).text
@@ -51,17 +66,13 @@ base_url_netloc = parsed_base_url.netloc
 
 for tag in tags:
     link = tag["href"]
-    if link.startswith("http") or link.startswith("https"):
-        parsed_new_link = parse.urlparse(link)
-        link_netloc = parsed_new_link.netloc
-
-        if link_netloc.__eq__(base_url_netloc):
-            links.append(link)
-    elif link.startswith("/"):
-        links.append(base_url + link)
+    valid_link = isValidPage(link)
+    if not(valid_link is None):
+        links.append(valid_link)
 
 
 for link in links:
     path = Path(base_url)
     path.add(link)
-    Thread(create_path, args=(link, path))
+    Thread(target=create_path, args=(link, path)).start()
+print("The Empire Strikes Back")
