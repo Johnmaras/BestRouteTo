@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 from threading import Thread
 from Path import Path
+from Page import Page
 from urllib import parse
 
 base_url = "http://www.aueb.gr"
@@ -22,7 +23,7 @@ visited = set()
 # TODO It will possibly be used the location(internal/external) of the page. More to be added for a better discrimination
 
 
-def isValidPage(link):
+def is_valid_link(link):
     if link.startswith("http") or link.startswith("https"):
         parsed_new_link = parse.urlparse(link)
         link_netloc = parsed_new_link.netloc
@@ -35,23 +36,37 @@ def isValidPage(link):
     return None
 
 
+def create_pages(urls):
+    pages = []
+    for url in urls:
+        pages.append(Page(url))
+    return pages.sort()
+
+
 def create_path(url, path):
 
     url_contents = requests.get(url).text
 
     soup = BeautifulSoup(url_contents, "html.parser")
 
-    tags = soup.find_all("a")
+    a_tags = soup.find_all("a")
+
+    page_links = []
+    for a_tag in a_tags:
+        link = a_tag["href"]
+        valid_link = is_valid_link(link)
+        if not(valid_link is None):
+            page_links.append(a_tag["href"])
+
+    pages = create_pages(page_links)
 
     path.add(url)
-    for a_tag in tags:
-        link = a_tag["href"]
-        valid_link = isValidPage(link)
-        if not(valid_link is None):
-            if not visited.__contains__(valid_link):
-                create_path(valid_link, path)
-            else:
-                paths.append(path)
+    for page in pages:
+        page_url = page.url
+        if not visited.__contains__(page_url):
+            create_path(page_url, path)
+        else:
+            paths.append(path)
 
 
 url_contents = requests.get(base_url).text
