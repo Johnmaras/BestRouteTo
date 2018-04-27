@@ -13,10 +13,12 @@ paths = []
 visited = set()
 
 # NOTE program output(under consideration): tree of all best routes to final pages(more outputs to be added)
+# NOTE                                      dead links, and (probably) all of their routes
 
 # TODO create an xml(or something) file that prettily presents the best route tree
 
 # NOTE The program must decide which route to choose to go with(namely which link to request next from each page)
+# NOTE                    ^partially done
 # NOTE despite the fact that in the end it will scan every possible route
 
 # TODO create a heuristic(or something) function that determines why a route is preferable over another.
@@ -58,7 +60,7 @@ def create_path(url, path):
     path.add(url)
     for page in pages:
         page_url = page.url
-        if not visited.__contains__(page_url):
+        if not(page_url in visited):
             create_path(page_url, path)
         else:
             paths.append(path)

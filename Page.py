@@ -16,9 +16,11 @@ class Page:
         for tag in link_tags:
             self.links.append(tag["href"])
 
-    def cost(self):
+    def cost(self, content):
         # TODO also mind the media the page carries
-        return self.links.__len__()
+        media_tags = content.find_all(src=True)
+
+        return self.links.__len__() + media_tags.__len__()
 
     def __lt__(self, other_page):
         return self.cost() < other_page.cost()
