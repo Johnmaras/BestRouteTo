@@ -29,18 +29,18 @@ def is_valid_link(link):
         link_netloc = parsed_new_link.netloc
 
         if link_netloc.__eq__(base_url_netloc):
-            return link
+            return True  # it was link
     elif link.startswith("/"):
-        return base_url + link
+        return True  # it was base_url + link
 
-    return None
+    return False
 
 
 def create_pages(urls):
     pages = []
     for url in urls:
         pages.append(Page(url))
-    return pages.sort()
+    return pages
 
 
 def create_path(url, path):
@@ -51,14 +51,9 @@ def create_path(url, path):
 
     a_tags = soup.find_all("a")
 
-    page_links = []
-    for a_tag in a_tags:
-        link = a_tag["href"]
-        valid_link = is_valid_link(link)
-        if not(valid_link is None):
-            page_links.append(a_tag["href"])
+    page_links = filter(lambda x: is_valid_link(x), map(lambda x: x["href"], a_tags))
 
-    pages = create_pages(page_links)
+    pages = create_pages(page_links).sort()
 
     path.add(url)
     for page in pages:
@@ -69,25 +64,21 @@ def create_path(url, path):
             paths.append(path)
 
 
+parsed_base_url = parse.urlparse(base_url)
+base_url_netloc = parsed_base_url.netloc
+
 url_contents = requests.get(base_url).text
 
 soup = BeautifulSoup(url_contents, "html.parser")
 
-tags = soup.find_all("a")
-links = []
+a_tags = soup.find_all("a")
+page_links = filter(lambda x: is_valid_link(x), map(lambda x: x["href"], a_tags))
 
-parsed_base_url = parse.urlparse(base_url)
-base_url_netloc = parsed_base_url.netloc
+pages = create_pages(page_links)
 
-for tag in tags:
-    link = tag["href"]
-    valid_link = isValidPage(link)
-    if not(valid_link is None):
-        links.append(valid_link)
-
-
-for link in links:
+for page in pages:
     path = Path(base_url)
-    path.add(link)
-    Thread(target=create_path, args=(link, path)).start()
+    page_url = page.url
+    path.add(page_url)
+    Thread(target=create_path, args=(page_url, path)).start()
 print("The Empire Strikes Back")
