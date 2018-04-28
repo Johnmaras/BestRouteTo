@@ -6,7 +6,8 @@ from Page import Page
 from urllib import parse
 
 base_url = "http://www.aueb.gr"
-initial = True
+parsed_base_url = parse.urlparse(base_url)
+base_url_netloc = parsed_base_url.netloc
 
 paths = []
 
@@ -30,7 +31,7 @@ def is_valid_link(link):
         parsed_new_link = parse.urlparse(link)
         link_netloc = parsed_new_link.netloc
 
-        if link_netloc.__eq__(base_url_netloc):
+        if link_netloc == base_url_netloc:
             return True  # it was link
     elif link.startswith("/"):
         return True  # it was base_url + link
@@ -65,9 +66,6 @@ def create_path(url, path):
         else:
             paths.append(path)
 
-
-parsed_base_url = parse.urlparse(base_url)
-base_url_netloc = parsed_base_url.netloc
 
 url_contents = requests.get(base_url).text
 

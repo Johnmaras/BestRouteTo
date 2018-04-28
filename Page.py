@@ -8,6 +8,7 @@ class Page:
     def __init__(self, url):
         self.url = url
         self.links = []
+        self.weight = 0
 
     def create_page(self):
         url_text = requests.get(self.url).text
@@ -20,7 +21,7 @@ class Page:
         # TODO also mind the media the page carries
         media_tags = content.find_all(src=True)
 
-        return self.links.__len__() + media_tags.__len__()
+        self.weight = self.links.__len__() + media_tags.__len__()
 
     def __lt__(self, other_page):
         return self.cost() < other_page.cost()
