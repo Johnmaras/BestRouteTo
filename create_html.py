@@ -19,7 +19,7 @@ for i in range(1, n + 1):
 for j in range(1, n):
     page = tags.html()
 
-    page_title = tags.title("Page " + str(j + 1))
+    page_title = tags.title("Page " + str(j))
     page_head = tags.head(page_title)
 
     page_body = tags.body()
@@ -30,7 +30,8 @@ for j in range(1, n):
     ul_links = tags.ul()
     for r in range(1, random.randint(1, n)):
         li_link = tags.li()
-        link = li_link.add(tags.a("This is a link", href=(pages[random.randint(0, n - 1)])))
+        page_to_link = pages[random.randint(0, n - 1)]
+        link = li_link.add(tags.a("This is a link to {}".format(page_to_link), href=page_to_link))
         ul_links.add(li_link)
     page_body.add(ul_links)
 
@@ -38,6 +39,6 @@ for j in range(1, n):
     page.add(page_body)
 
     out_file = open(pages_dir + os.sep + pages[j - 1], 'w+')
-    out_file.write(page.__str__())
+    out_file.write(str(page))
 
 # print(page)
