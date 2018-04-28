@@ -16,7 +16,7 @@ pages = []
 for i in range(1, n + 1):
     pages.append("page{}.html".format(i))
 
-for j in range(1, n):
+for j in range(1, n + 1):
     page = tags.html()
 
     page_title = tags.title("Page " + str(j))
@@ -31,7 +31,7 @@ for j in range(1, n):
     for r in range(1, random.randint(1, n)):
         li_link = tags.li()
         page_to_link = pages[random.randint(0, n - 1)]
-        link = li_link.add(tags.a("This is a link to {}".format(page_to_link), href=page_to_link))
+        link = li_link.add(tags.a("This is a link to {}".format(page_to_link), href="/{}".format(page_to_link)))
         ul_links.add(li_link)
     page_body.add(ul_links)
 

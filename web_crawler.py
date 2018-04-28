@@ -5,7 +5,9 @@ from Path import Path
 from Page import Page
 from urllib import parse
 
-base_url = "http://www.aueb.gr"
+# base_url = "http://www.aueb.gr"
+base_url = "http://127.0.0.1:3117"
+first_page = "{}/{}".format(base_url, "page1.html")
 parsed_base_url = parse.urlparse(base_url)
 base_url_netloc = parsed_base_url.netloc
 
@@ -42,7 +44,7 @@ def is_valid_link(link):
 def create_pages(urls):
     pages = []
     for url in urls:
-        pages.append(Page(url))
+        pages.append(Page(url, base_url))
     return pages
 
 
@@ -54,9 +56,10 @@ def create_path(url, path):
 
     a_tags = soup.find_all("a")
 
-    page_links = filter(lambda x: is_valid_link(x), map(lambda x: x["href"], a_tags))
+    page_links = list(filter(lambda x: is_valid_link(x), map(lambda x: x["href"], a_tags)))
 
-    pages = create_pages(page_links).sort()
+    pages = create_pages(page_links)
+    pages.sort()
 
     path.add(url)
     for page in pages:
@@ -67,17 +70,17 @@ def create_path(url, path):
             paths.append(path)
 
 
-url_contents = requests.get(base_url).text
+url_contents = requests.get(first_page).text
 
 soup = BeautifulSoup(url_contents, "html.parser")
 
 a_tags = soup.find_all("a")
-page_links = filter(lambda x: is_valid_link(x), map(lambda x: x["href"], a_tags))
+page_links = list(filter(lambda x: is_valid_link(x), map(lambda x: x["href"], a_tags)))
 
 pages = create_pages(page_links)
 
 for page in pages:
-    path = Path(base_url)
+    path = Path(first_page)
     page_url = page.url
     path.add(page_url)
     Thread(target=create_path, args=(page_url, path)).start()
