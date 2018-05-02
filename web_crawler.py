@@ -49,7 +49,7 @@ def create_pages(urls):
 
 
 def create_path(url, path):
-
+    # visited.add(url)
     url_contents = requests.get(url).text
 
     soup = BeautifulSoup(url_contents, "html.parser")
@@ -66,8 +66,11 @@ def create_path(url, path):
         page_url = page.url
         if not(page_url in visited):
             create_path(page_url, path)
+            path.add(page_url)
+            paths.append(path)
         else:
             paths.append(path)
+            # visited.add(page.url)
 
 
 url_contents = requests.get(first_page).text
@@ -83,5 +86,6 @@ for page in pages:
     path = Path(first_page)
     page_url = page.url
     path.add(page_url)
-    Thread(target=create_path, args=(page_url, path)).start()
+    create_path(page_url, path)
+    # Thread(target=create_path, args=(page_url, path)).start()
 print("The Empire Strikes Back")
