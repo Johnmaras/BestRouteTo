@@ -11,7 +11,7 @@ first_page = "{}/{}".format(base_url, "page1.html")
 parsed_base_url = parse.urlparse(base_url)
 base_url_netloc = parsed_base_url.netloc
 
-paths = []
+paths = set()
 
 visited = set()
 
@@ -73,19 +73,29 @@ def create_path(url, path):
             # visited.add(page.url)
 
 
-url_contents = requests.get(first_page).text
+# url_contents = requests.get(first_page).text
+aPage = Page(first_page, base_url)
+path = Path(aPage)
+paths.add(path)
+# soup = BeautifulSoup(url_contents, "html.parser")
 
-soup = BeautifulSoup(url_contents, "html.parser")
+# a_tags = soup.find_all("a")
+# page_links = list(filter(lambda x: is_valid_link(x), map(lambda x: x["href"], a_tags)))
 
-a_tags = soup.find_all("a")
-page_links = list(filter(lambda x: is_valid_link(x), map(lambda x: x["href"], a_tags)))
+# neighbors = create_pages(page_links)
 
-pages = create_pages(page_links)
+# TODO the paths set must delete Path objects that are more costly than others
+# TODO path must be the min_cost, not_visited one
+for path in paths:
+    node = path.last
+    visited.add(node)
 
-for page in pages:
-    path = Path(first_page)
-    page_url = page.url
-    path.add(page_url)
-    create_path(page_url, path)
-    # Thread(target=create_path, args=(page_url, path)).start()
+    # DONE get only the not_visited ones
+    raw_neighbors = create_pages(node.links)
+    neighbors = list(filter(lambda x: not(x in visited), raw_neighbors))
+    for n in neighbors:
+        new_path = path
+        new_path.add(n)
+        paths.add(new_path)
+        # Thread(target=create_path, args=(page_url, path)).start()
 print("The Empire Strikes Back")
