@@ -3,17 +3,12 @@ import requests
 from threading import Thread
 from Path import Path
 from Page import Page
+from MySet import MySet
 from urllib import parse
 
 # base_url = "http://www.aueb.gr"
 base_url = "http://127.0.0.1:3117"
 first_page = "{}/{}".format(base_url, "page1.html")
-parsed_base_url = parse.urlparse(base_url)
-base_url_netloc = parsed_base_url.netloc
-
-paths = set()
-
-visited = set()
 
 # NOTE program output(under consideration): tree of all best routes to final pages(more outputs to be added)
 # NOTE                                      dead links, and (probably) all of their routes
@@ -26,19 +21,6 @@ visited = set()
 
 # TODO create a heuristic(or something) function that determines why a route is preferable over another.
 # TODO It will possibly be used the location(internal/external) of the page. More to be added for a better discrimination
-
-
-def is_valid_link(link):
-    if link.startswith("http") or link.startswith("https"):
-        parsed_new_link = parse.urlparse(link)
-        link_netloc = parsed_new_link.netloc
-
-        if link_netloc == base_url_netloc:
-            return True  # it was link
-    elif link.startswith("/"):
-        return True  # it was base_url + link
-
-    return False
 
 
 def create_pages(urls):
@@ -74,6 +56,9 @@ def create_path(url, path):
 
 
 # url_contents = requests.get(first_page).text
+paths = set()
+visited = set()
+collection = MySet()
 aPage = Page(first_page, base_url)
 path = Path(aPage)
 paths.add(path)
@@ -86,9 +71,9 @@ paths.add(path)
 
 # TODO the paths set must delete Path objects that are more costly than others
 # TODO path must be the min_cost, not_visited one
-for path in paths:
+for path in collection.paths:
     node = path.last
-    visited.add(node)
+    # visited.add(node)  It is done inside the MySet class
 
     # DONE get only the not_visited ones
     raw_neighbors = create_pages(node.links)
