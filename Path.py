@@ -1,3 +1,4 @@
+from functools import reduce
 from Page import Page
 
 
@@ -17,6 +18,13 @@ class Path:
 
     def calc_cost(self):
         self.cost += self.last.weight
+
+    def __str__(self):
+        st = "Start = ({start}), End = ({end}), Cost = {cost}"\
+            .format(start=self.start, end=self.last, cost=self.cost)
+
+        st += ", Intermediate Nodes = {}".format(self.path[1:-1])
+        return st
 
     def __eq__(self, other):
         if self.start == other.start and self.last == other.last:
@@ -55,3 +63,10 @@ class Path:
             return -1
         else:
             return 0
+
+    def copy(self):
+        new_path = Path(self.start)
+        for p in self.path[1:]:
+            new_path.add(p)
+
+        return new_path

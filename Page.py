@@ -5,7 +5,7 @@ from urllib import parse
 
 class Page:
     def __init__(self, url, base_url):
-        self.url = base_url + url
+        self.url = "{}/{}".format(base_url, url)
         self.base_url = base_url
         self.links = []
         self.weight = 0
@@ -63,3 +63,6 @@ class Page:
             return -1
         else:
             return 0
+
+    def __str__(self):
+        return "Url = {}, Weight = {}".format(self.url, self.weight)
