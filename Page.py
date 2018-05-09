@@ -44,6 +44,12 @@ class Page:
 
         return False
 
+    def __hash__(self, *args, **kwargs):
+        return super().__hash__(*args, **kwargs)
+
+    def __eq__(self, other):
+        return self.url == other.url
+
     def __lt__(self, other_page):
         return self.weight < other_page.weight
 

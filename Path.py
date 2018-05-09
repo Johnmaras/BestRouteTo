@@ -26,35 +26,23 @@ class Path:
         st += ", Intermediate Nodes = {}".format(self.path[1:-1])
         return st
 
+    def __hash__(self, *args, **kwargs):
+        return super().__hash__(*args, **kwargs)
+
     def __eq__(self, other):
-        if self.start == other.start and self.last == other.last:
-            return self.cost == other.cost
-        else:
-            return False
+        return self.start == other.start and self.last == other.last
 
     def __gt__(self, other):
-        if self.start == other.start and self.last == other.last:
-            return self.cost > other.cost
-        else:
-            return False
+        return self.cost > other.cost
 
     def __lt__(self, other):
-        if self.start == other.start and self.last == other.last:
-            return self.cost < other.cost
-        else:
-            return False
+        return self.cost < other.cost
 
     def __ge__(self, other):
-        if self.start == other.start and self.last == other.last:
-            return self.cost >= other.cost
-        else:
-            return False
+        return self.cost >= other.cost
 
     def __le__(self, other):
-        if self.start == other.start and self.last == other.last:
-            return self.cost <= other.cost
-        else:
-            return False
+        return self.cost <= other.cost
 
     def __cmp__(self, other):
         if self > other:

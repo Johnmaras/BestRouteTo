@@ -58,10 +58,12 @@ def create_pages(urls):
 # url_contents = requests.get(first_page).text
 # paths = set()
 # visited = set()
+
 collection = MySet()
 aPage = Page(first_page, base_url)
 path = Path(aPage)
 collection.add(path)
+
 # soup = BeautifulSoup(url_contents, "html.parser")
 
 # a_tags = soup.find_all("a")
@@ -71,7 +73,9 @@ collection.add(path)
 
 # TODO the paths set must delete Path objects that are more costly than others
 # TODO path must be the min_cost, not_visited one
-for path in collection.paths:
+while collection.has_next():
+    path = collection.pop()
+# for path in collection.paths:
     node = path.last
     # visited.add(node)  It is done inside the MySet class
 
