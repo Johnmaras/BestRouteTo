@@ -11,6 +11,16 @@ class Path:
         self.last = None
         self.add(self.start)
 
+    def print(self):
+        print()
+        print("Cost = {}".format(self.cost))
+        print("Start = {}".format(self.start))
+        print("End = {}".format(self.last))
+        print("Path[")
+        for p in self.path:
+            print(p)
+        print("]")
+
     def add(self, page: Page):
         self.path.append(page)
         self.last = page
@@ -23,7 +33,10 @@ class Path:
         st = "Start = ({start}), End = ({end}), Cost = {cost}"\
             .format(start=self.start, end=self.last, cost=self.cost)
 
-        st += ", Intermediate Nodes = {}".format(self.path[1:-1])
+        st += ", Intermediate Nodes = {"
+        for p in self.path:
+            st += str(p)
+        st += "}"
         return st
 
     def __hash__(self, *args, **kwargs):

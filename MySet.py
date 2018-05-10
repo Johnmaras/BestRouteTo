@@ -5,17 +5,17 @@ class MySet(set):
         self.min = None
         super().__init__()
 
-    def set_min(self, path):
-        if self.min is None:
-            self.min = path
-            return
-
-        if self.min.last in self.visited:
-            self.min = path
-        else:
-            if not(path.last in self.visited):
-                if path.cost < self.min.cost:
-                    self.min = path
+    # def set_min(self, path):
+    #     if self.min is None:
+    #         self.min = path
+    #         return
+    #
+    #     if self.min.last in self.visited:
+    #         self.min = path
+    #     else:
+    #         if not(path.last in self.visited):
+    #             if path.cost < self.min.cost:
+    #                 self.min = path
 
     def add(self, path):
         found = False
@@ -24,7 +24,7 @@ class MySet(set):
                 if path < p:
                     self.paths.remove(p)
                     self.paths.append(path)
-                    self.set_min(path)
+                    # self.set_min(path)
                     # found = True
                     return
                 else:
@@ -33,17 +33,32 @@ class MySet(set):
 
         if not(found):
             self.paths.append(path)
-            self.set_min(path)
+            # self.set_min(path)
 
     def pop(self):
         self.visited.append(self.min.last)
         return self.min
 
-    # def sort(self):
-    #     not_visited_paths = list(filter(lambda x: not(x.last in self.visited), self.paths))
-    #     self.min = min(not_visited_paths, key=(lambda x, y: x.cost < y.cost))
+    def set_min(self):
+        not_visited_paths = list(filter(lambda x: not(x.last in self.visited), self.paths))
+        if not not_visited_paths:
+            return
+        self.min = min(not_visited_paths)
 
     def has_next(self):
         last_nodes = set(map(lambda x: x.last, self.paths))
         diff = last_nodes.difference(set(self.visited))
         return not(diff.__len__() == 0)
+
+    def print(self):
+        print()
+        print("Min = {}".format(self.min))
+        print("Paths{")
+        for p in self.paths:
+            print(p)
+        print("}")
+
+        print("Visited{")
+        for p in self.visited:
+            print(p)
+        print("}")

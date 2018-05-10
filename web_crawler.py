@@ -58,11 +58,17 @@ def create_pages(urls):
 # url_contents = requests.get(first_page).text
 # paths = set()
 # visited = set()
-
+# outer = 1
 collection = MySet()
 aPage = Page(first_page, base_url)
+# print("{} Page = {}".format(outer, aPage))
 path = Path(aPage)
+# print("---{}---".format(outer))
+# path.print()
+
 collection.add(path)
+collection.set_min()
+# collection.print()
 
 # soup = BeautifulSoup(url_contents, "html.parser")
 
@@ -75,16 +81,33 @@ collection.add(path)
 # TODO path must be the min_cost, not_visited one
 while collection.has_next():
     path = collection.pop()
-# for path in collection.paths:
+    # print("---{}---".format(outer))
+    # path.print()
+    # for path in collection.paths:
     node = path.last
+    # node.print()
+
     # visited.add(node)  It is done inside the MySet class
 
     # DONE get only the not_visited ones
     raw_neighbors = create_pages(node.links)
     neighbors = list(filter(lambda x: not(x in collection.visited), raw_neighbors))
+    # print("{} Neighbors = {}".format(outer, neighbors))
+    # inner = 1
     for n in neighbors:
+        # print("---{}---".format(inner))
+        # n.print()
         new_path = path.copy()
         new_path.add(n)
+        # print("---{}---".format(inner))
+        # new_path.print()
         collection.add(new_path)
+        # collection.print()
+        # inner += 1
+    collection.set_min()
+    # outer += 1
+
         # Thread(target=create_path, args=(page_url, path)).start()
-print("The Empire Strikes Back")
+
+for p in collection.paths:
+    p.print()

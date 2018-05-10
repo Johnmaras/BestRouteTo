@@ -71,5 +71,9 @@ class Page:
         else:
             return 0
 
+    def print(self):
+        print()
+        print(self)
+
     def __str__(self):
         return "Url = {}, Weight = {}".format(self.url, self.weight)
