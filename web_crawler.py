@@ -8,7 +8,7 @@ from urllib import parse
 
 # base_url = "http://www.aueb.gr"
 base_url = "http://127.0.0.1:3117"
-first_page = "page1.html"
+first_page = "a.html"
 
 # NOTE program output(under consideration): tree of all best routes to final pages(more outputs to be added)
 # NOTE                                      dead links, and (probably) all of their routes

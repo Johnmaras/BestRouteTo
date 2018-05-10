@@ -5,7 +5,7 @@ from urllib import parse
 
 class Page:
     def __init__(self, url, base_url):
-        self.url = "{}/{}".format(base_url, url)
+        self.url = "{}/{}".format(base_url.strip('/'), url.strip('/'))
         self.base_url = base_url
         self.links = []
         self.weight = 0
@@ -30,7 +30,8 @@ class Page:
         # TODO also mind the media the page carries
         media_tags = content.find_all(src=True)
 
-        self.weight = self.links.__len__() + media_tags.__len__()
+        # self.weight = self.links.__len__() + media_tags.__len__()
+        self.weight = media_tags.__len__()
 
     def is_valid_link(self, link):
         if link.startswith("http") or link.startswith("https"):

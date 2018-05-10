@@ -10,11 +10,11 @@ try:
 except:
     pass
 
-n = 20
+n = 6
 
 pages = []
 for i in range(1, n + 1):
-    pages.append("page{}.html".format(i))
+    pages.append("{}.html".format(i))
 
 for j in range(1, n + 1):
     page = tags.html()
