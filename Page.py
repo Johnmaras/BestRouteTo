@@ -22,16 +22,13 @@ class Page:
 
         self.links = list(filter(lambda x: self.is_valid_link(x), map(lambda x: x["href"], link_tags)))
 
-        # for tag in link_tags:
-        #     self.links.append(tag["href"])
         self.cost(soup)
 
     def cost(self, content):
         # TODO also mind the media the page carries
         media_tags = content.find_all(src=True)
 
-        # self.weight = self.links.__len__() + media_tags.__len__()
-        self.weight = media_tags.__len__()
+        self.weight = self.links.__len__() + media_tags.__len__()
 
     def is_valid_link(self, link):
         if link.startswith("http") or link.startswith("https"):
@@ -72,8 +69,7 @@ class Page:
             return 0
 
     def print(self):
-        print()
-        print(self)
+        print("\nUrl = {}, Weight = {}".format(self.url, self.weight))
 
     def __str__(self):
-        return "Url = {}, Weight = {}".format(self.url, self.weight)
+        return self.url

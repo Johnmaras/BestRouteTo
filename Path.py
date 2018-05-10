@@ -30,13 +30,9 @@ class Path:
         self.cost += self.last.weight
 
     def __str__(self):
-        st = "Start = ({start}), End = ({end}), Cost = {cost}"\
-            .format(start=self.start, end=self.last, cost=self.cost)
-
-        st += ", Intermediate Nodes = {"
+        st = ""
         for p in self.path:
-            st += str(p)
-        st += "}"
+            st += str(p) + "\n"
         return st
 
     def __hash__(self, *args, **kwargs):

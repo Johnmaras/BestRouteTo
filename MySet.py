@@ -5,18 +5,6 @@ class MySet(set):
         self.min = None
         super().__init__()
 
-    # def set_min(self, path):
-    #     if self.min is None:
-    #         self.min = path
-    #         return
-    #
-    #     if self.min.last in self.visited:
-    #         self.min = path
-    #     else:
-    #         if not(path.last in self.visited):
-    #             if path.cost < self.min.cost:
-    #                 self.min = path
-
     def add(self, path):
         found = False
         for p in self.paths:
@@ -24,8 +12,6 @@ class MySet(set):
                 if path < p:
                     self.paths.remove(p)
                     self.paths.append(path)
-                    # self.set_min(path)
-                    # found = True
                     return
                 else:
                     found = True
@@ -33,7 +19,6 @@ class MySet(set):
 
         if not(found):
             self.paths.append(path)
-            # self.set_min(path)
 
     def pop(self):
         self.visited.append(self.min.last)
