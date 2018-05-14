@@ -4,8 +4,9 @@ from urllib import parse
 
 
 class Page:
-    def __init__(self, url: str, base_url: str):
-        self.url = "{}/{}".format(base_url.strip('/'), url.strip('/'))
+    def __init__(self, page: str, base_url: str):
+        self.page = page
+        self.url = "{}/{}".format(base_url.strip('/'), page.strip('/'))
         self.base_url = base_url
         self.links = []
         self.weight = 0
@@ -18,7 +19,7 @@ class Page:
         soup = BeautifulSoup(url_text, "html.parser")
         link_tags = soup.find_all("a")
 
-        self.links = list(filter(lambda x: self.is_valid_link(x), map(lambda x: x["href"], link_tags)))
+        self.links = list(filter(lambda x: self.is_valid_link(x), map(lambda x: x["href"] if x.has_attr("href") else None, link_tags)))
 
         self.cost(soup)
 
@@ -29,6 +30,8 @@ class Page:
         self.weight = self.links.__len__() + media_tags.__len__()
 
     def is_valid_link(self, link: str):
+        if link is None:
+            return False
         if link.startswith("http") or link.startswith("https"):
             parsed_new_link = parse.urlparse(link)
             link_netloc = parsed_new_link.netloc
@@ -70,4 +73,4 @@ class Page:
         print("\nUrl = {}, Weight = {}".format(self.url, self.weight))
 
     def __str__(self):
-        return self.url
+        return "\nUrl = {}, Weight = {}".format(self.url, self.weight)

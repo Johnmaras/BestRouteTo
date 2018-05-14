@@ -53,6 +53,10 @@ class MySet(set):
         # if it is then there are no more unvisited paths
         return not(diff.__len__() == 0)
 
+    def is_visited(self, url):
+        visited_pages = list(map(lambda x: x.page, self.visited))
+        return url in visited_pages
+
     def print(self):
         print()
         print("Min = {}".format(self.min))
@@ -66,3 +70,15 @@ class MySet(set):
             print(p)
         print("}")
 
+    def __str__(self):
+        s = "Paths{"
+        for p in self.paths:
+            s += p + "\n"
+        s += "}\n"
+
+        s += "Visited{"
+        for p in self.visited:
+            s += p + "\n"
+        s += "}"
+
+        return s

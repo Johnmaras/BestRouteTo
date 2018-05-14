@@ -1,6 +1,9 @@
+import os
+
 from bs4 import BeautifulSoup
 import requests
 from threading import Thread
+import threading
 from Path import Path
 from Page import Page
 from MySet import MySet
@@ -17,11 +20,36 @@ first_page = "/"
 
 # TODO improve the heuristic
 
+pages = []
+parsed = []
+
+
+def command(url, baseurl):
+    pages.append(Page(url, baseurl))
+
 
 def create_pages(urls: list):
+    global collection
+    global pages
+    # start = time.time()
     pages = []
+    threads = []
+    # i = 1
     for url in urls:
-        pages.append(Page(url, base_url))
+        if collection.is_visited(url) or (url in parsed):
+            continue
+        else:
+            parsed.append(url)
+            # t_name = "thread" + str(i)
+            t = Thread(target=command, args=(url, base_url))
+            threads.append(t)
+            t.start()
+            print(url)
+    for t in threads:
+        if t.is_alive():
+            t.join()
+    # end = time.time()
+    # print(end - start)
     return pages
 
 start = time.time()
@@ -50,14 +78,18 @@ while collection.has_next():
     # get its last node
     node = path.last
 
+    print("Current node")
+    node.print()
+
     # get its neighbors
     raw_neighbors = create_pages(node.links)
-
     # get its unvisited neighbors
     neighbors = list(filter(lambda x: not(x in collection.visited), raw_neighbors))
 
     # for each neighbor
+    print("Neighbors:")
     for n in neighbors:
+        n.print()
         # copy the base path so we can create a new path for each neighbor
         new_path = path.copy()
 
@@ -72,8 +104,20 @@ while collection.has_next():
 
 end = time.time()
 f_out = open("crawlResults", 'w+')
+parsed_out = open("parsed_list", 'w+')
 for p in collection.paths:
     f_out.write("Best route to\n{ln}\nis\n{path}\n".format(ln=p.last, path=p))
     f_out.flush()
 f_out.close()
+
+for p in pages:
+    parsed_out.write(str(p))
+    parsed_out.flush()
+parsed_out.close()
+
+col_file = open("collection", 'w+')
+col_file.write(str(collection))
+col_file.flush()
+col_file.close()
+
 print(end - start)
