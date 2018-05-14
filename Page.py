@@ -4,15 +4,13 @@ from urllib import parse
 
 
 class Page:
-    def __init__(self, url, base_url):
+    def __init__(self, url: str, base_url: str):
         self.url = "{}/{}".format(base_url.strip('/'), url.strip('/'))
         self.base_url = base_url
         self.links = []
         self.weight = 0
 
-        # parsed_base_url = parse.urlparse(base_url)
         self.base_url_netloc = parse.urlparse(base_url).netloc
-
         self.create_page()
 
     def create_page(self):
@@ -24,13 +22,13 @@ class Page:
 
         self.cost(soup)
 
-    def cost(self, content):
+    def cost(self, content: BeautifulSoup):
         # TODO also mind the media the page carries
         media_tags = content.find_all(src=True)
 
         self.weight = self.links.__len__() + media_tags.__len__()
 
-    def is_valid_link(self, link):
+    def is_valid_link(self, link: str):
         if link.startswith("http") or link.startswith("https"):
             parsed_new_link = parse.urlparse(link)
             link_netloc = parsed_new_link.netloc

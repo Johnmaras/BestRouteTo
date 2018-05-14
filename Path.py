@@ -11,6 +11,21 @@ class Path:
         self.last = None
         self.add(self.start)
 
+    def add(self, page: Page):
+        self.path.append(page)
+        self.last = page
+        self.calc_cost()
+
+    def calc_cost(self):
+        self.cost += self.last.weight
+
+    def copy(self):
+        new_path = Path(self.start)
+        for p in self.path[1:]:
+            new_path.add(p)
+
+        return new_path
+
     def print(self):
         print()
         print("Cost = {}".format(self.cost))
@@ -20,14 +35,6 @@ class Path:
         for p in self.path:
             print(p)
         print("]")
-
-    def add(self, page: Page):
-        self.path.append(page)
-        self.last = page
-        self.calc_cost()
-
-    def calc_cost(self):
-        self.cost += self.last.weight
 
     def __str__(self):
         st = ""
@@ -60,10 +67,3 @@ class Path:
             return -1
         else:
             return 0
-
-    def copy(self):
-        new_path = Path(self.start)
-        for p in self.path[1:]:
-            new_path.add(p)
-
-        return new_path

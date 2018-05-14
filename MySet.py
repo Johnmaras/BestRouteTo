@@ -1,3 +1,6 @@
+from Path import Path
+
+
 class MySet(set):
     def __init__(self):
         self.paths = list()
@@ -5,7 +8,7 @@ class MySet(set):
         self.min = None
         super().__init__()
 
-    def add(self, path):
+    def add(self, path: Path):
         found = False
         # for each of the paths we have so far discovered(visited or not)
         for p in self.paths:
@@ -21,7 +24,7 @@ class MySet(set):
                     break
 
         # if path's and p's starting and ending nodes do not coincide with p's -> add it
-        if not(found):
+        if not found:
             self.paths.append(path)
 
     def pop(self):
@@ -62,3 +65,4 @@ class MySet(set):
         for p in self.visited:
             print(p)
         print("}")
+

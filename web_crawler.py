@@ -4,11 +4,12 @@ from threading import Thread
 from Path import Path
 from Page import Page
 from MySet import MySet
-from urllib import parse
+import time
 
-# base_url = "http://www.aueb.gr"
-base_url = "http://127.0.0.1:3117"
-first_page = "a.html"
+base_url = "http://www.aueb.gr"
+# base_url = "http://127.0.0.1:3117"
+# first_page = "a.html"
+first_page = "/"
 
 # TODO find and print dead links
 
@@ -17,15 +18,13 @@ first_page = "a.html"
 # TODO improve the heuristic
 
 
-def create_pages(urls):
-    """Gets a list of urls and creates Page objects.
-       These nodes represent the nodes of the graph."""
+def create_pages(urls: list):
     pages = []
     for url in urls:
         pages.append(Page(url, base_url))
     return pages
 
-
+start = time.time()
 # create a custom composite data structure that implements some of the algorithm logic
 # and keeps track of each needed data structure
 collection = MySet()
@@ -71,5 +70,10 @@ while collection.has_next():
     # find the next min path
     collection.set_min()
 
+end = time.time()
+f_out = open("crawlResults", 'w+')
 for p in collection.paths:
-    print("Best route to\n{ln}\nis\n{path}\n".format(ln=p.last, path=p))
+    f_out.write("Best route to\n{ln}\nis\n{path}\n".format(ln=p.last, path=p))
+    f_out.flush()
+f_out.close()
+print(end - start)
