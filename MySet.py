@@ -1,4 +1,5 @@
 from Path import Path
+import pickle
 
 
 class MySet(set):
@@ -27,9 +28,13 @@ class MySet(set):
         if not found:
             self.paths.append(path)
 
+        self.write_paths()
+
     def pop(self):
         # the last node of the path we are about to pop is now considered visited
         self.visited.append(self.min.last)
+
+        self.write_visited()
 
         # return the next unvisited cheapest path
         return self.min
@@ -82,3 +87,13 @@ class MySet(set):
         s += "}"
 
         return s
+
+    def write_visited(self):
+        f = open("col_visited", "bw")
+        pickle.dump(self.visited, f)
+        f.close()
+
+    def write_paths(self):
+        f = open("col_paths", "bw")
+        pickle.dump(self.paths, f)
+        f.close()

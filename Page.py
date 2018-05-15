@@ -15,7 +15,11 @@ class Page:
         self.create_page()
 
     def create_page(self):
-        url_text = requests.get(self.url).text
+        try:
+            url_text = requests.get(self.url).text
+        except Exception as e:
+            print(e)
+            return
         soup = BeautifulSoup(url_text, "html.parser")
         link_tags = soup.find_all("a")
 

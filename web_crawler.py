@@ -1,5 +1,6 @@
 import os
 
+import pickle
 from bs4 import BeautifulSoup
 import requests
 from threading import Thread
@@ -13,6 +14,8 @@ base_url = "http://www.aueb.gr"
 # base_url = "http://127.0.0.1:3117"
 # first_page = "a.html"
 first_page = "/"
+
+parsed_out = open("parsed_list", 'w+')
 
 # TODO find and print dead links
 
@@ -44,13 +47,18 @@ def create_pages(urls: list):
             t = Thread(target=command, args=(url, base_url))
             threads.append(t)
             t.start()
-            print(url)
+            # print(url)
     for t in threads:
         if t.is_alive():
             t.join()
     # end = time.time()
     # print(end - start)
+
+    pickle.dump(parsed, parsed_out)
+    parsed_out.close()
+
     return pages
+
 
 start = time.time()
 # create a custom composite data structure that implements some of the algorithm logic
@@ -78,8 +86,8 @@ while collection.has_next():
     # get its last node
     node = path.last
 
-    print("Current node")
-    node.print()
+    # print("Current node")
+    # node.print()
 
     # get its neighbors
     raw_neighbors = create_pages(node.links)
@@ -87,9 +95,9 @@ while collection.has_next():
     neighbors = list(filter(lambda x: not(x in collection.visited), raw_neighbors))
 
     # for each neighbor
-    print("Neighbors:")
+    # print("Neighbors:")
     for n in neighbors:
-        n.print()
+        # n.print()
         # copy the base path so we can create a new path for each neighbor
         new_path = path.copy()
 
@@ -103,21 +111,6 @@ while collection.has_next():
     collection.set_min()
 
 end = time.time()
-f_out = open("crawlResults", 'w+')
-parsed_out = open("parsed_list", 'w+')
-for p in collection.paths:
-    f_out.write("Best route to\n{ln}\nis\n{path}\n".format(ln=p.last, path=p))
-    f_out.flush()
-f_out.close()
-
-for p in pages:
-    parsed_out.write(str(p))
-    parsed_out.flush()
-parsed_out.close()
-
-col_file = open("collection", 'w+')
-col_file.write(str(collection))
-col_file.flush()
-col_file.close()
+# f_out = open("crawlResults", 'w+')
 
 print(end - start)
