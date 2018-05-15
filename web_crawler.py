@@ -86,8 +86,8 @@ while collection.has_next():
     # get its last node
     node = path.last
 
-    # print("Current node")
-    # node.print()
+    print("Current node")
+    node.print()
 
     # get its neighbors
     raw_neighbors = create_pages(node.links)
@@ -95,9 +95,9 @@ while collection.has_next():
     neighbors = list(filter(lambda x: not(x in collection.visited), raw_neighbors))
 
     # for each neighbor
-    # print("Neighbors:")
+    print("Neighbors:")
     for n in neighbors:
-        # n.print()
+        n.print()
         # copy the base path so we can create a new path for each neighbor
         new_path = path.copy()
 
