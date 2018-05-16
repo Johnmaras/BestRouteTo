@@ -1,9 +1,16 @@
-from MySet import MySet
-from Path
+import pickle
 
+f = open("col_visited", 'br')
+# f = open("col_paths", 'br')
+# f = open("parsed_list", 'br')
+# f = open("neighbors", 'br')
 
-my_list = MyList()
-my_list.add([1, 4, 3, 14, 23, 46, 37, 95, 2, 118])
+l = pickle.load(f)
 
-for n in my_list:
-    print(n)
+f.close()
+
+for p in l:
+    if not (l.count(p) == 1):
+        print(p)
+
+print("hi")

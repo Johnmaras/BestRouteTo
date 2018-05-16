@@ -15,7 +15,8 @@ base_url = "http://www.aueb.gr"
 # first_page = "a.html"
 first_page = "/"
 
-parsed_out = open("parsed_list", 'w+')
+parsed_out = open("parsed_list", 'bw')
+neighs_file = open("neighbors", 'bw')
 
 # TODO find and print dead links
 
@@ -25,6 +26,7 @@ parsed_out = open("parsed_list", 'w+')
 
 pages = []
 parsed = []
+neighs = []
 
 
 def command(url, baseurl):
@@ -55,7 +57,6 @@ def create_pages(urls: list):
     # print(end - start)
 
     pickle.dump(parsed, parsed_out)
-    parsed_out.close()
 
     return pages
 
@@ -97,6 +98,7 @@ while collection.has_next():
     # for each neighbor
     print("Neighbors:")
     for n in neighbors:
+        neighs.append(n)
         n.print()
         # copy the base path so we can create a new path for each neighbor
         new_path = path.copy()
@@ -107,6 +109,8 @@ while collection.has_next():
         # let the collection decide whether to add it or not
         collection.add(new_path)
 
+    pickle.dump(neighs, neighs_file)
+
     # find the next min path
     collection.set_min()
 
@@ -114,3 +118,4 @@ end = time.time()
 # f_out = open("crawlResults", 'w+')
 
 print(end - start)
+parsed_out.close()

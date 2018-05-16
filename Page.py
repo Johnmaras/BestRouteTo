@@ -16,7 +16,12 @@ class Page:
 
     def create_page(self):
         try:
-            url_text = requests.get(self.url).text
+            url_req = requests.get(self.url)
+            ct = url_req.headers.get("content-type")
+            if ct.lower().startswith("text"):
+                url_text = url_req.text
+            else:
+                return
         except Exception as e:
             print(e)
             return
