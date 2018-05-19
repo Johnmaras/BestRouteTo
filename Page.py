@@ -1,3 +1,5 @@
+import json
+
 import requests
 from bs4 import BeautifulSoup
 from urllib import parse
@@ -82,4 +84,11 @@ class Page:
         print("\nUrl = {}, Weight = {}".format(self.url, self.weight))
 
     def __str__(self):
-        return "\nUrl = {}, Weight = {}".format(self.url, self.weight)
+        return self.to_json()
+        # return "\nUrl = {}, Weight = {}".format(self.url, self.weight)
+
+    def to_json(self):
+        s = {"url": self.url,
+             "weight": self.weight}
+
+        return s

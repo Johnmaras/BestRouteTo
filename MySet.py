@@ -1,5 +1,6 @@
 from Path import Path
 import pickle
+import json
 
 
 class MySet(set):
@@ -87,6 +88,11 @@ class MySet(set):
         s += "}"
 
         return s
+
+    def to_json(self):
+        s = {"paths": list(map(lambda x: x.to_json(), self.paths))}
+
+        return json.dumps(s)
 
     def write_visited(self):
         f = open("col_visited", "bw")

@@ -1,3 +1,4 @@
+import json
 from functools import reduce
 from Page import Page
 
@@ -37,10 +38,18 @@ class Path:
         print("]")
 
     def __str__(self):
-        st = ""
-        for p in self.path:
-            st += str(p) + "\n"
-        return st
+        # st = ""
+        # for p in self.path:
+        #     st += str(p) + "\n"
+        # return st
+        return self.to_json()
+
+    def to_json(self):
+        s = {"start": self.start.to_json(),
+             "end": self.last.to_json(),
+             "cost": self.cost,
+             "path": list(map(lambda x: x.to_json(), self.path))}
+        return s
 
     def __hash__(self, *args, **kwargs):
         return super().__hash__(*args, **kwargs)
