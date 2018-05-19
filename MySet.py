@@ -28,13 +28,13 @@ class MySet(set):
         if not found:
             self.paths.append(path)
 
-        self.write_paths()
+        # self.write_paths()
 
     def pop(self):
         # the last node of the path we are about to pop is now considered visited
         self.visited.append(self.min.last)
 
-        self.write_visited()
+        # self.write_visited()
 
         # return the next unvisited cheapest path
         return self.min
@@ -78,12 +78,12 @@ class MySet(set):
     def __str__(self):
         s = "Paths{"
         for p in self.paths:
-            s += p + "\n"
+            s += str(p) + "\n"
         s += "}\n"
 
         s += "Visited{"
         for p in self.visited:
-            s += p + "\n"
+            s += str(p) + "\n"
         s += "}"
 
         return s

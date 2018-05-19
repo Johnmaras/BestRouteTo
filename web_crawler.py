@@ -10,13 +10,10 @@ from Page import Page
 from MySet import MySet
 import time
 
-base_url = "http://www.aueb.gr"
-# base_url = "http://127.0.0.1:3117"
-# first_page = "a.html"
-first_page = "/"
-
-parsed_out = open("parsed_list", 'bw')
-neighs_file = open("neighbors", 'bw')
+# base_url = "http://www.aueb.gr"
+base_url = "http://127.0.0.1:3117"
+first_page = "page1.html"
+# first_page = "/"
 
 # TODO find and print dead links
 
@@ -26,7 +23,6 @@ neighs_file = open("neighbors", 'bw')
 
 pages = []
 parsed = []
-neighs = []
 
 
 def command(url, baseurl):
@@ -55,8 +51,6 @@ def create_pages(urls: list):
             t.join()
     # end = time.time()
     # print(end - start)
-
-    pickle.dump(parsed, parsed_out)
 
     return pages
 
@@ -87,19 +81,13 @@ while collection.has_next():
     # get its last node
     node = path.last
 
-    print("Current node")
-    node.print()
-
     # get its neighbors
     raw_neighbors = create_pages(node.links)
     # get its unvisited neighbors
     neighbors = list(filter(lambda x: not(x in collection.visited), raw_neighbors))
 
     # for each neighbor
-    print("Neighbors:")
     for n in neighbors:
-        neighs.append(n)
-        n.print()
         # copy the base path so we can create a new path for each neighbor
         new_path = path.copy()
 
@@ -109,13 +97,10 @@ while collection.has_next():
         # let the collection decide whether to add it or not
         collection.add(new_path)
 
-    pickle.dump(neighs, neighs_file)
-
     # find the next min path
     collection.set_min()
 
 end = time.time()
-# f_out = open("crawlResults", 'w+')
-
+f_out = open("crawlResults", 'w+')
+f_out.write(str(collection))
 print(end - start)
-parsed_out.close()
