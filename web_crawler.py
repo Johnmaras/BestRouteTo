@@ -1,20 +1,14 @@
 import json
-import os
-
-import pickle
-from bs4 import BeautifulSoup
-import requests
-from threading import Thread
-import threading
-from Path import Path
-from Page import Page
-from MySet import MySet
 import time
+from threading import Thread
 import MyDictToXML
+from MySet import MySet
+from Page import Page
+from Path import Path
 
 # base_url = "http://www.aueb.gr"
 base_url = "http://127.0.0.1:3117"
-first_page = "page1.html"
+first_page = "a.html"
 # first_page = "/"
 
 # TODO find and print dead links
@@ -34,25 +28,19 @@ def command(url, baseurl):
 def create_pages(urls: list):
     global collection
     global pages
-    # start = time.time()
     pages = []
     threads = []
-    # i = 1
     for url in urls:
         if collection.is_visited(url) or (url in parsed):
             continue
         else:
             parsed.append(url)
-            # t_name = "thread" + str(i)
             t = Thread(target=command, args=(url, base_url))
             threads.append(t)
             t.start()
-            # print(url)
     for t in threads:
         if t.is_alive():
             t.join()
-    # end = time.time()
-    # print(end - start)
 
     return pages
 
@@ -85,6 +73,7 @@ while collection.has_next():
 
     # get its neighbors
     raw_neighbors = create_pages(node.links)
+
     # get its unvisited neighbors
     neighbors = list(filter(lambda x: not(x in collection.visited), raw_neighbors))
 
@@ -103,8 +92,6 @@ while collection.has_next():
     collection.set_min()
 
 end = time.time()
-# f_out = open("crawlResults", 'w+')
-# f_out.write(str(collection))
 
 xml_f = open("paths.xml", "bw+")
 
@@ -113,8 +100,5 @@ addons = ["<?xml-stylesheet type=\"text/css\" href=\"style.css\"?>"]
 data = MyDictToXML.dicttoxml(json.loads(collection.to_json()), root=False, additions=addons)
 
 xml_f.write(data)
-# print(data)
-
-# print(collection.to_json())
 
 print(end - start)
