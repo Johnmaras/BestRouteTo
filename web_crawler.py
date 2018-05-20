@@ -16,11 +16,6 @@ parser.add_argument("-do", "--deadout", help="The path to where the dead links x
 parser.add_argument("-css", "--style", help="Provide custom css file for formatting the xml files", type=str)
 arg = parser.parse_args()
 
-# base_url = "http://www.aueb.gr"
-# base_url = "http://127.0.0.1:3117"
-# first_page = "a.html"
-# first_page = "/"
-
 base_url = arg.domain
 first_page = arg.firstpage
 
