@@ -10,11 +10,11 @@ from Path import Path
 from Page import Page
 from MySet import MySet
 import time
-import dicttoxml
+import MyDictToXML
 
 # base_url = "http://www.aueb.gr"
 base_url = "http://127.0.0.1:3117"
-first_page = "a.html"
+first_page = "page1.html"
 # first_page = "/"
 
 # TODO find and print dead links
@@ -25,8 +25,6 @@ first_page = "a.html"
 
 pages = []
 parsed = []
-
-xml_f = open("paths.xml", "bw+")
 
 
 def command(url, baseurl):
@@ -108,7 +106,11 @@ end = time.time()
 # f_out = open("crawlResults", 'w+')
 # f_out.write(str(collection))
 
-data = dicttoxml.dicttoxml(json.loads(collection.to_json()))
+xml_f = open("paths.xml", "bw+")
+
+addons = ["<?xml-stylesheet type=\"text/css\" href=\"style.css\"?>"]
+
+data = MyDictToXML.dicttoxml(json.loads(collection.to_json()), root=False, additions=addons)
 
 xml_f.write(data)
 # print(data)

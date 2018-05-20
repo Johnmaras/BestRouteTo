@@ -88,7 +88,6 @@ class Page:
         # return "\nUrl = {}, Weight = {}".format(self.url, self.weight)
 
     def to_json(self):
-        s = {"url": self.url,
-             "weight": self.weight}
+        s = {"url": self.url}
 
         return s
