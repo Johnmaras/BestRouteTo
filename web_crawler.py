@@ -5,11 +5,24 @@ import MyDictToXML
 from MySet import MySet
 from Page import Page
 from Path import Path
+import argparse
+
+parser = argparse.ArgumentParser(prog="python3 web_crawler.py", description="Export shortest paths of a domain into XML, create XML sitemap, find dead links")
+parser.add_argument("-d", "--domain", help="The domain url", type=str, required=True)
+parser.add_argument("-f", "--firstpage", help="The home page of the domain. Defaults to /", type=str, default="/")
+parser.add_argument("-so", "--sitemapout", help="The path to where the sitemap xml will be saved", type=str, default="sitemap.xml")
+parser.add_argument("-po", "--pathsout", help="The path to where the shortest paths xml will be saved", type=str, default="paths.xml")
+parser.add_argument("-do", "--deadout", help="The path to where the dead links xml will be saved", type=str, default="dead.xml")
+parser.add_argument("-css", "--style", help="Provide custom css file for formatting the xml files", type=str)
+arg = parser.parse_args()
 
 # base_url = "http://www.aueb.gr"
-base_url = "http://127.0.0.1:3117"
-first_page = "a.html"
+# base_url = "http://127.0.0.1:3117"
+# first_page = "a.html"
 # first_page = "/"
+
+base_url = arg.domain
+first_page = arg.firstpage
 
 # TODO find and print dead links
 
@@ -93,9 +106,11 @@ while collection.has_next():
 
 end = time.time()
 
-xml_f = open("paths.xml", "bw+")
-
-addons = ["<?xml-stylesheet type=\"text/css\" href=\"style.css\"?>"]
+xml_f = open(arg.pathsout, "bw+")
+addons = []
+if arg.style:
+    style_line = "<?xml-stylesheet type=\"text/css\" href=\"{cssfile}\"?>".format(cssfile=arg.style)
+    addons = [style_line]
 
 data = MyDictToXML.dicttoxml(json.loads(collection.to_json()), root=False, additions=addons)
 
