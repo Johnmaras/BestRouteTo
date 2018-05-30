@@ -3,6 +3,8 @@ import random
 import os
 
 
+# creates random html pages that link to each other
+
 pages_dir = "test_pages"
 
 try:
@@ -10,7 +12,7 @@ try:
 except:
     pass
 
-n = 6
+n = 20
 
 pages = []
 for i in range(1, n + 1):
@@ -40,5 +42,3 @@ for j in range(1, n + 1):
 
     out_file = open(pages_dir + os.sep + pages[j - 1], 'w+')
     out_file.write(str(page))
-
-# print(page)

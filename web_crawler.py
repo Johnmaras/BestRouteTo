@@ -1,7 +1,5 @@
-import json
 import time
 from threading import Thread
-import MyDictToXML
 from MySet import MySet
 from Page import Page
 from Path import Path
@@ -14,13 +12,10 @@ parser.add_argument("-f", "--firstpage", help="The home page of the domain. Defa
 parser.add_argument("-so", "--sitemapout", help="The path to where the sitemap xml will be saved", type=str, default="sitemap.xml")
 parser.add_argument("-po", "--pathsout", help="The path to where the shortest paths xml will be saved", type=str, default="paths.xml")
 parser.add_argument("-do", "--deadout", help="The path to where the dead links xml will be saved", type=str, default="dead.xml")
-parser.add_argument("-css", "--style", help="Provide custom css file for formatting the xml files", type=str)
 arg = parser.parse_args()
 
 base_url = arg.domain
 first_page = arg.firstpage
-
-# TODO improve the heuristic
 
 pages = []
 parsed = []
@@ -28,7 +23,6 @@ dead = []
 
 
 def sitemap_out():
-    # TODO add more info
     rootEl = ET.Element("urlset")
     for site in collection.visited:
         url_Elem = ET.Element("url")
@@ -141,4 +135,4 @@ paths_out()
 sitemap_out()
 dead_out()
 
-print(end - start)
+print("It took {} seconds to crawl the domain".format(end - start))
