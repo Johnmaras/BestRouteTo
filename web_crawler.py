@@ -20,14 +20,11 @@ arg = parser.parse_args()
 base_url = arg.domain
 first_page = arg.firstpage
 
-# TODO find and print dead links
-
-# TODO create an xml(or something) file that prettily presents the best route tree
-
 # TODO improve the heuristic
 
 pages = []
 parsed = []
+dead = []
 
 
 def sitemap_out():
@@ -43,23 +40,33 @@ def sitemap_out():
 
         rootEl.append(url_Elem)
     xmltree = ET.ElementTree(element=rootEl)
-    xmltree.write("sitemap.xml")
+    xmltree.write(arg.sitemapout)
 
 
 def paths_out():
-    xml_f = open(arg.pathsout, "bw+")
-    addons = []
-    if arg.style:
-        style_line = "<?xml-stylesheet type=\"text/css\" href=\"{cssfile}\"?>".format(cssfile=arg.style)
-        addons = [style_line]
+    rootElem = ET.Element("paths")
+    for path in collection.paths:
+        rootElem.append(path.to_xml())
 
-    data = MyDictToXML.dicttoxml(json.loads(collection.to_json()), root=False, additions=addons)
+    xmltree = ET.ElementTree(element=rootElem)
+    xmltree.write(arg.pathsout)
 
-    xml_f.write(data)
+
+def dead_out():
+    rootElem = ET.Element("dead")
+    for page in dead:
+        rootElem.append(page.to_xml())
+
+    xmltree = ET.ElementTree(element=rootElem)
+    xmltree.write(arg.deadout)
 
 
 def command(url, baseurl):
-    pages.append(Page(url, baseurl))
+    page = Page(url, baseurl)
+    if not(page.is_dead()):
+        pages.append(page)
+    else:
+        dead.append(page)
 
 
 def create_pages(urls: list):
@@ -132,5 +139,6 @@ end = time.time()
 
 paths_out()
 sitemap_out()
+dead_out()
 
 print(end - start)

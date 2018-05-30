@@ -3,6 +3,7 @@ import json
 import requests
 from bs4 import BeautifulSoup
 from urllib import parse
+import xml.etree.ElementTree as ET
 
 
 class Page:
@@ -12,7 +13,7 @@ class Page:
         self.base_url = base_url
         self.links = []
         self.weight = 0
-
+        self.dead = False
         self.base_url_netloc = parse.urlparse(base_url).netloc
         self.create_page()
 
@@ -25,7 +26,10 @@ class Page:
             else:
                 return
         except Exception as e:
-            print(e)
+            print("{} on page {}".format(e, self.page.strip("/")))
+
+            # Assume that failed requests are dead links
+            self.dead = True
             return
         soup = BeautifulSoup(url_text, "html.parser")
         link_tags = soup.find_all("a")
@@ -48,11 +52,14 @@ class Page:
             link_netloc = parsed_new_link.netloc
 
             if link_netloc == self.base_url_netloc:
-                return True  # it was link
+                return True
         elif link.startswith("/"):
-            return True  # it was base_url + link
+            return True
 
         return False
+
+    def is_dead(self):
+        return self.dead
 
     def __hash__(self, *args, **kwargs):
         return super().__hash__(*args, **kwargs)
@@ -89,5 +96,9 @@ class Page:
 
     def to_json(self):
         s = {"url": self.url}
-
         return s
+
+    def to_xml(self):
+        page = ET.Element("page")
+        page.text = self.url
+        return page

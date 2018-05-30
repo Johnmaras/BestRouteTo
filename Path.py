@@ -1,6 +1,7 @@
 import json
 from functools import reduce
 from Page import Page
+import xml.etree.ElementTree as ET
 
 
 class Path:
@@ -50,6 +51,29 @@ class Path:
              "cost": self.cost,
              "path": list(map(lambda x: x.to_json(), self.path))}
         return s
+
+    def to_xml(self):
+        pathElem = ET.Element("path")
+
+        startElem = ET.Element("start")
+        startElem.append(self.start.to_xml())
+
+        endElem = ET.Element("end")
+        endElem.append(self.last.to_xml())
+
+        costElem = ET.Element("cost")
+        costElem.text = str(self.cost)
+
+        routeElem = ET.Element("route")
+        for page in self.path:
+            routeElem.append(page.to_xml())
+
+        pathElem.append(startElem)
+        pathElem.append(endElem)
+        pathElem.append(costElem)
+        pathElem.append(routeElem)
+
+        return pathElem
 
     def __hash__(self, *args, **kwargs):
         return super().__hash__(*args, **kwargs)
