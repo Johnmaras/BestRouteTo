@@ -6,6 +6,7 @@ from MySet import MySet
 from Page import Page
 from Path import Path
 import argparse
+import xml.etree.ElementTree as ET
 
 parser = argparse.ArgumentParser(prog="python3 web_crawler.py", description="Export shortest paths of a domain into XML, create XML sitemap, find dead links")
 parser.add_argument("-d", "--domain", help="The domain url", type=str, required=True)
@@ -27,6 +28,34 @@ first_page = arg.firstpage
 
 pages = []
 parsed = []
+
+
+def sitemap_out():
+    # TODO add more info
+    rootEl = ET.Element("urlset")
+    for site in collection.visited:
+        url_Elem = ET.Element("url")
+
+        loc_Elem = ET.Element("loc")
+        loc_Elem.text = site.url
+
+        url_Elem.append(loc_Elem)
+
+        rootEl.append(url_Elem)
+    xmltree = ET.ElementTree(element=rootEl)
+    xmltree.write("sitemap.xml")
+
+
+def paths_out():
+    xml_f = open(arg.pathsout, "bw+")
+    addons = []
+    if arg.style:
+        style_line = "<?xml-stylesheet type=\"text/css\" href=\"{cssfile}\"?>".format(cssfile=arg.style)
+        addons = [style_line]
+
+    data = MyDictToXML.dicttoxml(json.loads(collection.to_json()), root=False, additions=addons)
+
+    xml_f.write(data)
 
 
 def command(url, baseurl):
@@ -101,14 +130,7 @@ while collection.has_next():
 
 end = time.time()
 
-xml_f = open(arg.pathsout, "bw+")
-addons = []
-if arg.style:
-    style_line = "<?xml-stylesheet type=\"text/css\" href=\"{cssfile}\"?>".format(cssfile=arg.style)
-    addons = [style_line]
-
-data = MyDictToXML.dicttoxml(json.loads(collection.to_json()), root=False, additions=addons)
-
-xml_f.write(data)
+paths_out()
+sitemap_out()
 
 print(end - start)
