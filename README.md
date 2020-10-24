@@ -17,8 +17,8 @@ Runs on python 3.x<r>
 
 From terminal:<br>
 python3 web_crawler.py --domain http://www.example.com --firstpage thefirstpage.html<br>
--d/--domain is required<br>
--f/--firstpage defaults to /<br>
--so/--sitemapout defaults to sitemap.xml<br>
--po/--pathsout defaults to paths.xml<br>
--do/--deadout defaults to dead.xml<br>
+-d, --domain is required<br>
+-f, --firstpage defaults to /<br>
+-so, --sitemapout defaults to sitemap.xml<br>
+-po, --pathsout defaults to paths.xml<br>
+-do, --deadout defaults to dead.xml<br>
