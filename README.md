@@ -9,13 +9,11 @@ It is also provided an http server for testing purposes and a script that create
 
 # Depedencies
 It requires the following libraries:<br>
-<li> requests
 <li> bs4
 <li> dominate<br>
-I think the rest is built-in
 
 # Running
-Runs on python 3.x<br>
+Runs on python 3.x<r>
 
 From terminal:<br>
 python3 web_crawler.py --domain http://www.example.com --firstpage thefirstpage.html<br>
